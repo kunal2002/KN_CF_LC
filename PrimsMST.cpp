@@ -1,3 +1,7 @@
+//prims basically goes to one node and then visits all it's adjacent nodes, now whichever node can be visited with the least weight of them all shall be considered
+//because we are pulling the edges out from the minimum heap and so what it basically does is, visits them at the point when it's popping them out and again 
+//visits all it's adjacent nodes whichever ones are not visited they are pushed into the min heap , this goes on and on untill all nodes are visited and then we 
+// get our minimum spanning tree
 int spanningTree(int V, vector<vector<int>> adj[])
     {
         // code here
