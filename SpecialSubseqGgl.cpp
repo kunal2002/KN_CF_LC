@@ -95,7 +95,7 @@ void init()
 }
 map<char, int> mp1;
 int maxTillNow = 0;
-int func(string str, int i, int k, map<char,int>& mp, int freqSum)
+int func(string str, int i, int k, map<char,int>& mp, int freqSum, vector<vector<int>>& dp)
 {
     if(i == str.size() || k == 0)
     {
@@ -106,28 +106,33 @@ int func(string str, int i, int k, map<char,int>& mp, int freqSum)
         }
         return 0;
     }
+    if(dp[maxTillNow][k] != -1)
+        return dp[maxTillNow][0];
     int flag = 0;
     int Take = 0;
     if(!mp[str[i]])
     {
         flag = 1;
         mp[str[i]]++;
-        Take = func(str, i + 1, k - 1, mp, freqSum + mp1[str[i]]);
+        Take = func(str, i + 1, k - 1, mp, freqSum + mp1[str[i]], dp);
     }
     if(flag)
         mp[str[i]]--;
-    int notTake = func(str, i + 1, k, mp, freqSum);
-    return (Take + notTake) % MOD;
+    int notTake = func(str, i + 1, k, mp, freqSum, dp);
+    return dp[maxTillNow][0] = (Take + notTake) % MOD;
 }
 void solve()
 {  
     int n, k; cin >> n >> k;
     string str; cin >> str;
-    // vector<vector<int>> dp(n + 1, vector<int> (k + 1, -1));
     map<char,int> mp;
     for(auto x: str)
         mp1[x]++;
-    int ans = func(str, 0, k, mp, 0);
+    int freqSum = 0;
+    for(auto x: mp1)
+        freqSum += x.second;
+    vector<vector<int>> dp(freqSum + 2, vector<int>(k + 1, -1));
+    int ans = func(str, 0, k, mp, 0, dp);
     cout << ans << "\n";
 }
 int32_t main() 
