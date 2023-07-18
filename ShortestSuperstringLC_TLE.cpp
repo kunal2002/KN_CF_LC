@@ -94,7 +94,9 @@ void init()
   #endif
 }
 string ans = "";
-void rec(vector<string>& words, int n, string t, int cnt, int s, int e, unordered_map<string, bool>& mp)
+unordered_map<string, bool> mp;
+int dp[250][250][20];
+void rec(vector<string>& words, int n, string t, int cnt, int s, int e)
 {
     if(cnt == n)
     {
@@ -107,49 +109,58 @@ void rec(vector<string>& words, int n, string t, int cnt, int s, int e, unordere
         for(auto st : words)
         {
             mp[st] = true;
-            rec(words, n, t + st, cnt + 1, 0, st.size(), mp);
+            rec(words, n, t + st, cnt + 1, 0, st.size());
             mp[st] = false;
         }
     }
-    else
+    else if (!ans.empty() && t.length() >= ans.length()) 
+        return;  // Pruning: Stop exploring if current superstring is longer or equal to the current ans
+    else if (dp[s][e][cnt] != -1) 
     {
-        for(int i = s; i < e; i++)
+        if (dp[s][e][cnt] >= ans.size()) 
+        { 
+            dp[s][e][cnt] = ans.size();
+            return;
+        }
+    }
+    
+    for(int i = s; i < e; i++)
+    {
+        for(auto st : words)
         {
-            for(auto st : words)
+            if(!mp[st])
             {
-                if(!mp[st])
+                string what = "";
+                int k = i, l = 0;
+                for(; k < t.size() && l < st.size(); k++, l++)
                 {
-                    string what = "";
-                    int k = i, l = 0;
-                    for(; k < t.size() && l < st.size(); k++, l++)
+                    if(st[l] != t[k])
                     {
-                        if(st[l] != t[k])
-                        {
-                            l = 0;
-                            break;
-                        }
+                        l = 0;
+                        break;
                     }
-                    while(l < st.size())
-                        what += st[l++];
-                    
-                    mp[st] = true;
-                    rec(words, n, t + what, cnt + 1, i, t.size() + what.size(), mp);
-                    mp[st] = false;
                 }
+                while(l < st.size())
+                    what += st[l++];
+                
+                mp[st] = true;
+                rec(words, n, t + what, cnt + 1, i, t.size() + what.size());
+                mp[st] = false;
             }
         }
     }
+
 }
 string shortestSuperstring(vector<string>& words) {
     int n = words.size();
     unordered_map<string, bool> mp;
-    rec(words, n, "", 0, 0, 0, mp);
+    memset(dp, -1, sizeof(dp));
+    // dp.assign(250, vector<int>(250, -1));
+    rec(words, n, "", 0, 0, 0);
     return ans;
 }
 void solve()
 {  
-  //Although gives TLE but perfectly solves the problem
-  //Original Solution by Kunal Nayyar
 	int n; cin >> n;
 	vector<string> words;
 	rep(i, 0, n)
@@ -159,7 +170,6 @@ void solve()
 	}
 	string res = shortestSuperstring(words);
 	cout << res << "\n";
-
 }
 int32_t main() 
 {
