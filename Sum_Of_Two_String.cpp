@@ -145,6 +145,8 @@ void solve()
         sum /= 10;
         carry = sum;
     }
+    if(carry)
+        final += to_string(carry);
     reverse(final.begin(), final.end());
     cout << final;
 }
