@@ -137,11 +137,18 @@ auto z_algo(string& str)
         }
         else
         {
-            l = i;
-            while(r < sz && str[r] == str[r - l])
-                r++;
-            vec[i] = r - l;
-            r--;
+            int idx = i - l;
+            if(i + vec[idx] <= r)
+                vec[i] = vec[idx];
+            else
+            {
+                l = i; 
+                debug(i)
+                while(r < sz && str[r] == str[r - l])
+                    r++;
+                vec[i] = r - l;
+                r--;
+            }
         }
     }
     return vec;
