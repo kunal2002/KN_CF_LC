@@ -1,5 +1,5 @@
 //Instead of visiting each node we make a sorted vector of pairs sorting them by weight for getting the MST, a DSU data structure is used which at each pair tells us
-//if the two nodes already have a shorted weighted edge or not, if they don't, DSU combines it, if it is already a component of DSU means we don't need an extra 
+//if the two nodes already have a sorted weighted edge or not, if they don't, DSU combines it, if it is already a component of DSU means we don't need an extra 
 //weight to connect it with any other node since it already is connected in the Data Structure, hence iterating over all edges in a weight-sorted manner we get 
 //minimum spanning tree weight
 class DisjointSet{
